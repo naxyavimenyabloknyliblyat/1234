@@ -496,35 +496,25 @@
 </div>
 
 <script>
-// ── DATA ───────────────────────────────────────────────────────────────────
-// В production замените эти переменные на Go-шаблон:
-// const D = { sId: "{{ .sId }}", enabled: {{ .enabled }}, ... }
-// Ниже — демо-данные для превью:
-
 const D = {
-  sId:           "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  enabled:       true,
-  download:      "14.2 ГБ",
-  upload:        "1.8 ГБ",
-  total:         "50 ГБ",
-  used:          "16.0 ГБ",
-  remained:      "34.0 ГБ",
-  expire:        Math.floor(Date.now()/1000) + 86400*18,
-  lastOnline:    Date.now() - 1000*60*7,
-  downloadByte:  14200000000,
-  uploadByte:    1800000000,
-  totalByte:     50000000000,
-  subUrl:        "https://console.zapretcore.ru/sub/f47ac10b",
-  subJsonUrl:    "https://console.zapretcore.ru/sub/f47ac10b?type=json",
-  subClashUrl:   "https://console.zapretcore.ru/sub/f47ac10b?type=clash",
-  subTitle:      "zapretcore",
-  subSupportUrl: "https://t.me/zapretcore",
-  links: [
-    "vless://abc123@console.zapretcore.ru:443?type=xhttp&security=tls&sni=console.zapretcore.ru&path=/xhttp#proxy-xhttp-777",
-    "vless://abc123@console.zapretcore.ru:443?type=grpc&security=tls&serviceName=vk.internal#proxy-grpc-228",
-    "hysteria2://abc123@console.zapretcore.ru:4443?obfs=salamander&obfs-password=secret#hysteria2-salamander",
-    "vless://abc123@89.169.128.127:443?type=tcp&security=reality&pbk=pubkey#nl-reality-relay",
-  ],
+  sId:          "{{ .sId }}",
+  enabled:      {{ .enabled }},
+  download:     "{{ .download }}",
+  upload:       "{{ .upload }}",
+  total:        "{{ .total }}",
+  used:         "{{ .used }}",
+  remained:     "{{ .remained }}",
+  expire:       {{ .expire }},
+  lastOnline:   {{ .lastOnline }},
+  downloadByte: {{ .downloadByte }},
+  uploadByte:   {{ .uploadByte }},
+  totalByte:    {{ .totalByte }},
+  subUrl:       "{{ .subUrl }}",
+  subJsonUrl:   "{{ .subJsonUrl }}",
+  subClashUrl:  "{{ .subClashUrl }}",
+  subTitle:     "{{ .subTitle }}",
+  subSupportUrl:"{{ .subSupportUrl }}",
+  links:        [{{ range .links }}"{{ . }}",{{ end }}],
 };
 
 // ── HELPERS ────────────────────────────────────────────────────────────────
