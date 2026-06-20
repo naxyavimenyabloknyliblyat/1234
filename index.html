@@ -1,105 +1,702 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ if .subTitle }}{{ .subTitle }}{{ else }}Subscription Dashboard{{ end }}</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>{{ .subTitle }} — Подписка</title>
 <style>
-/* Luminary Premium Theme CSS */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-:root {
-  --base-deep: #0F1115; --base-mid: #161A20; --slate-light: #9CA3AF;
-  --ivory: #E5E7EB; --silver: #B0B8C4;
-  --panel-bg: rgba(22, 26, 32, 0.55);
-  --panel-border: rgba(156, 163, 175, 0.08);
-}
-body { font-family: 'Montserrat', sans-serif; background: var(--base-deep); color: var(--ivory); overflow-x: hidden; }
-.grain { position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.03; mix-blend-mode: overlay; }
-.atmosphere { position: fixed; inset: 0; z-index: 0; background: linear-gradient(180deg, #0F1115 0%, #161A20 100%); }
-.container { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; padding: 80px 20px; text-align: center; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Hero */
-.hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; margin-bottom: 20px; opacity: 0; transform: translateY(20px); transition: all 1s ease; }
-.hero h1.visible { opacity: 1; transform: translateY(0); }
-.hero-metrics { display: flex; justify-content: center; gap: 40px; margin: 50px 0; }
-.metric { padding: 20px; background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 16px; min-width: 140px; }
-.metric-val { font-size: 1.5rem; font-weight: 600; }
-.metric-label { font-size: 0.7rem; color: var(--slate-light); text-transform: uppercase; letter-spacing: 0.1em; }
+  :root {
+    --accent: #5B8AF0;
+    --accent2: #A78BFA;
+    --green: #34D399;
+    --red: #F87171;
+    --amber: #FBBF24;
+    --bg: #0C0E1A;
+    --surface: rgba(255,255,255,0.04);
+    --surface2: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #F0F2FF;
+    --muted: rgba(240,242,255,0.5);
+    --faint: rgba(240,242,255,0.25);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
 
-/* Links Grid */
-.links-grid { display: flex; flex-direction: column; gap: 15px; margin-top: 50px; }
-.link-item { background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-.link-item:hover { border-color: rgba(176,184,196,0.3); }
-.link-url { font-family: monospace; font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; max-width: 70%; white-space: nowrap; }
-.btn { padding: 10px 20px; border-radius: 8px; border: none; background: var(--silver); color: var(--base-deep); font-weight: 600; cursor: pointer; font-size: 0.8rem; }
+  html, body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
 
-#toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 10px 20px; border-radius: 50px; display: none; font-size: 0.8rem; }
+  /* ── BACKGROUND ── */
+  .bg-canvas {
+    position: fixed; inset: 0; z-index: 0; overflow: hidden;
+  }
+  .bg-canvas canvas { position: absolute; inset: 0; }
+  .bg-orb {
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: .18;
+    animation: orb-drift 18s ease-in-out infinite alternate;
+  }
+  .bg-orb:nth-child(2) { width:520px;height:520px;background:#5B8AF0;top:-120px;left:-80px; animation-delay:0s; }
+  .bg-orb:nth-child(3) { width:420px;height:420px;background:#A78BFA;bottom:-100px;right:-60px; animation-delay:-6s; }
+  .bg-orb:nth-child(4) { width:280px;height:280px;background:#34D399;top:40%;left:50%;transform:translate(-50%,-50%); animation-delay:-12s; }
+  @keyframes orb-drift {
+    0%   { transform: translate(0,0) scale(1); }
+    100% { transform: translate(30px,20px) scale(1.08); }
+  }
+  .bg-orb:nth-child(4) {
+    animation: orb-drift2 14s ease-in-out infinite alternate;
+  }
+  @keyframes orb-drift2 {
+    0%   { transform: translate(-50%,-50%) scale(1); }
+    100% { transform: translate(calc(-50% + 20px),calc(-50% + 15px)) scale(1.1); }
+  }
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .bg-vignette {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(12,14,26,.85) 100%);
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 48px 16px 64px;
+    gap: 20px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    animation: fade-up .6s ease both;
+  }
+  .logo-wrap {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, rgba(91,138,240,.2), rgba(167,139,250,.2));
+    border: 1px solid rgba(91,138,240,.3);
+    border-radius: 18px;
+    margin-bottom: 14px;
+  }
+  .logo-wrap svg { width: 30px; height: 30px; }
+  .header h1 {
+    font-size: 22px; font-weight: 600; letter-spacing: -.3px;
+    background: linear-gradient(135deg, #fff 30%, #A78BFA);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .header p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  /* ── CARDS ── */
+  .card {
+    width: 100%; max-width: 480px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    animation: fade-up .6s ease both;
+  }
+  .card:nth-child(2) { animation-delay:.07s; }
+  .card:nth-child(3) { animation-delay:.14s; }
+  .card:nth-child(4) { animation-delay:.21s; }
+  .card:nth-child(5) { animation-delay:.28s; }
+
+  @keyframes fade-up {
+    from { opacity:0; transform:translateY(18px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* ── STATUS ROW ── */
+  .status-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  }
+  .badge.on  { background: rgba(52,211,153,.12); color: #34D399; border: 1px solid rgba(52,211,153,.25); }
+  .badge.off { background: rgba(248,113,113,.12); color: #F87171; border: 1px solid rgba(248,113,113,.25); }
+  .badge-dot { width:6px;height:6px;border-radius:50%; }
+  .badge.on  .badge-dot { background:#34D399; animation: pulse-dot 2s infinite; }
+  .badge.off .badge-dot { background:#F87171; }
+  @keyframes pulse-dot {
+    0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(52,211,153,.5); }
+    50%      { opacity:.8; box-shadow:0 0 0 4px rgba(52,211,153,0); }
+  }
+  .sid-text { font-size: 11px; color: var(--faint); font-family: monospace; }
+
+  /* ── TRAFFIC BAR ── */
+  .traffic-section { margin-bottom: 20px; }
+  .traffic-label-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+  }
+  .traffic-label-row span:first-child { font-size: 12px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
+  .traffic-pct { font-size: 12px; font-weight: 600; }
+  .bar-track {
+    height: 6px; background: rgba(255,255,255,.07);
+    border-radius: 99px; overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width .8s cubic-bezier(.4,0,.2,1);
+    position: relative;
+  }
+  .bar-fill::after {
+    content:''; position:absolute; right:0; top:0; bottom:0; width:20px;
+    background: rgba(255,255,255,.3);
+    animation: bar-shine 2.5s ease-in-out infinite;
+  }
+  @keyframes bar-shine {
+    0%,100% { opacity:0; } 50% { opacity:1; }
+  }
+  .bar-fill.warn { background: linear-gradient(90deg, var(--amber), #F97316); }
+  .bar-fill.crit { background: linear-gradient(90deg, var(--red), #DC2626); }
+
+  /* ── STATS GRID ── */
+  .stats-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 16px;
+  }
+  .stat-box {
+    background: var(--surface2); border-radius: var(--radius-sm);
+    padding: 12px 10px; text-align: center;
+    border: 1px solid var(--border);
+  }
+  .stat-val { font-size: 15px; font-weight: 600; color: var(--text); }
+  .stat-lbl { font-size: 10px; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: .05em; }
+
+  /* ── META ROWS ── */
+  .divider { height: 1px; background: var(--border); margin: 18px 0; }
+  .meta-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 0; font-size: 13px;
+  }
+  .meta-key { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+  .meta-key svg { width:14px;height:14px;opacity:.6;flex-shrink:0; }
+  .meta-val { font-weight: 500; color: var(--text); }
+  .meta-val.warn { color: var(--amber); }
+  .meta-val.crit { color: var(--red); }
+  .online-indicator { display:flex;align-items:center;gap:6px; }
+  .online-dot { width:6px;height:6px;border-radius:50%;background:var(--green); animation:pulse-dot 2s infinite; }
+  .online-dot.old { background:var(--muted);animation:none; }
+
+  /* ── APP BUTTONS ── */
+  .section-label {
+    font-size: 11px; color: var(--muted); text-transform: uppercase;
+    letter-spacing: .08em; font-weight: 600; margin-bottom: 14px;
+  }
+  .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .app-btn {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; padding: 16px 12px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); cursor: pointer; text-decoration: none;
+    transition: background .15s, border-color .15s, transform .12s;
+    color: var(--text);
+  }
+  .app-btn:hover { background: rgba(255,255,255,.1); border-color: var(--border2); transform: translateY(-2px); }
+  .app-btn:active { transform: scale(.97); }
+  .app-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .app-icon svg { width:20px;height:20px; }
+  .app-icon.blue   { background: rgba(91,138,240,.15); color: #5B8AF0; border: 1px solid rgba(91,138,240,.25); }
+  .app-icon.purple { background: rgba(167,139,250,.15); color: #A78BFA; border: 1px solid rgba(167,139,250,.25); }
+  .app-icon.green  { background: rgba(52,211,153,.15);  color: #34D399; border: 1px solid rgba(52,211,153,.25); }
+  .app-icon.amber  { background: rgba(251,191,36,.15);  color: #FBBF24; border: 1px solid rgba(251,191,36,.25); }
+  .app-btn-featured {
+    flex-direction: row; justify-content: flex-start; padding: 14px 16px;
+    border-color: rgba(167,139,250,.25);
+    background: linear-gradient(135deg, rgba(91,138,240,.06), rgba(167,139,250,.08));
+    position: relative; overflow: hidden;
+  }
+  .app-btn-featured::before {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(135deg, rgba(91,138,240,.04), rgba(167,139,250,.04));
+    opacity:0; transition: opacity .2s;
+  }
+  .app-btn-featured:hover::before { opacity:1; }
+  .app-btn-featured:hover { border-color: rgba(167,139,250,.45); transform: translateY(-2px); }
+  .app-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .app-sub  { font-size: 10px; color: var(--muted); margin-top: -4px; }
+
+  /* ── COPY ROW ── */
+  .copy-section { margin-top: 14px; }
+  .copy-input-wrap {
+    display: flex; gap: 8px;
+    background: rgba(255,255,255,.04); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 3px 3px 3px 12px;
+    align-items: center;
+  }
+  .copy-input-wrap input {
+    flex: 1; background: none; border: none; outline: none;
+    font-size: 12px; color: var(--muted); font-family: monospace;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .copy-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: 8px;
+    padding: 8px 16px; font-size: 12px; font-weight: 600; color: #fff;
+    cursor: pointer; white-space: nowrap; transition: opacity .15s, transform .12s;
+    flex-shrink: 0;
+  }
+  .copy-btn:hover { opacity: .88; }
+  .copy-btn:active { transform: scale(.96); }
+  .copy-btn.copied { background: linear-gradient(135deg, var(--green), #059669); }
+
+  /* ── LINKS LIST ── */
+  .links-list { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .link-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 12px; gap: 10px;
+  }
+  .link-info { overflow: hidden; }
+  .link-proto {
+    font-size: 11px; font-weight: 700; letter-spacing: .05em;
+    padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 3px;
+  }
+  .link-proto.vless    { background:rgba(91,138,240,.15);color:#5B8AF0; }
+  .link-proto.vmess    { background:rgba(167,139,250,.15);color:#A78BFA; }
+  .link-proto.hysteria2{ background:rgba(52,211,153,.15);color:#34D399; }
+  .link-proto.trojan   { background:rgba(251,191,36,.15);color:#FBBF24; }
+  .link-proto.ss       { background:rgba(248,113,113,.15);color:#F87171; }
+  .link-name { font-size: 12px; font-weight: 500; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:240px; }
+  .link-host { font-size: 11px; color: var(--faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:240px; }
+  .link-copy-btn {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 7px; padding: 5px 10px; font-size: 11px;
+    color: var(--muted); cursor: pointer; flex-shrink: 0;
+    transition: border-color .15s, color .15s;
+  }
+  .link-copy-btn:hover { border-color: var(--border2); color: var(--text); }
+  .link-copy-btn.copied { color: var(--green); border-color: rgba(52,211,153,.4); }
+
+  /* ── FOOTER ── */
+  .footer {
+    font-size: 12px; color: var(--faint); text-align: center;
+    animation: fade-up .6s .35s ease both;
+  }
+  .footer a { color: var(--muted); text-decoration: none; }
+  .footer a:hover { color: var(--text); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 420px) {
+    .app-grid { grid-template-columns: 1fr 1fr; }
+    .card { padding: 18px 16px; }
+    .stats-grid { gap: 8px; }
+  }
 </style>
 </head>
 <body>
 
-<svg class="grain" width="100%" height="100%">
-  <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="5"/><feColorMatrix type="saturate" values="0"/></filter>
-  <rect width="100%" height="100%" filter="url(#n)"/>
-</svg>
-<div class="atmosphere"></div>
-
-<div class="container">
-  <div class="hero">
-    <h1 id="title">Your Connection</h1>
-    <p style="color: var(--slate-light);">ID: {{ .sId }}</p>
-    
-    <div class="hero-metrics">
-        <div class="metric">
-            <div class="metric-val">{{ .used }}</div>
-            <div class="metric-label">Used</div>
-        </div>
-        <div class="metric">
-            <div class="metric-val" style="color: var(--silver);">{{ .remained }}</div>
-            <div class="metric-label">Remaining</div>
-        </div>
-    </div>
-  </div>
-
-  <div class="links-grid" id="nodes">
-    {{ range .links }}
-    <div class="link-item">
-        <div class="link-url">{{ . }}</div>
-        <button class="btn" onclick="copyText(this)">Copy</button>
-    </div>
-    {{ end }}
-  </div>
+<div class="bg-canvas">
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+  <div class="bg-orb"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-vignette"></div>
 </div>
 
-<div id="toast">Copied to clipboard!</div>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="url(#lg1)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <defs>
+          <linearGradient id="lg1" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#5B8AF0"/>
+            <stop offset="100%" stop-color="#A78BFA"/>
+          </linearGradient>
+        </defs>
+        <path d="M12 2L3 7l9 5 9-5-9-5z"/>
+        <path d="M3 12l9 5 9-5"/>
+        <path d="M3 17l9 5 9-5"/>
+      </svg>
+    </div>
+    <h1 id="page-title">zapretcore</h1>
+    <p>Панель управления подпиской</p>
+  </div>
+
+  <!-- STATUS CARD -->
+  <div class="card">
+    <div class="status-row">
+      <span class="badge on" id="status-badge">
+        <span class="badge-dot"></span>
+        Активна
+      </span>
+      <span class="sid-text" id="sid-text">—</span>
+    </div>
+
+    <div class="traffic-section">
+      <div class="traffic-label-row">
+        <span>Трафик</span>
+        <span class="traffic-pct" id="traffic-pct" style="color:var(--accent)">0%</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" id="bar-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-val" id="used-val">—</div>
+        <div class="stat-lbl">Использовано</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="remain-val">—</div>
+        <div class="stat-lbl">Осталось</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="total-val">—</div>
+        <div class="stat-lbl">Всего</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="meta-row">
+      <span class="meta-key">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Истекает
+      </span>
+      <span class="meta-val" id="expire-val">—</span>
+    </div>
+    <div class="meta-row">
+      <span class="meta-key">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+        Последний вход
+      </span>
+      <span class="meta-val" id="last-val">—</span>
+    </div>
+    <div class="meta-row">
+      <span class="meta-key">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 16 12 21 17 16"/><path d="M12 21V3"/></svg>
+        Скачано
+      </span>
+      <span class="meta-val" id="dl-val">—</span>
+    </div>
+    <div class="meta-row">
+      <span class="meta-key">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 8 12 3 7 8"/><path d="M12 3v18"/></svg>
+        Загружено
+      </span>
+      <span class="meta-val" id="ul-val">—</span>
+    </div>
+  </div>
+
+  <!-- ПОДКЛЮЧИТЬ ПРИЛОЖЕНИЕ -->
+  <div class="card">
+    <div class="section-label">Подключить приложение</div>
+
+    <a class="app-btn app-btn-featured" id="btn-happ" href="#" target="_blank">
+      <div style="display:flex;align-items:center;gap:14px;width:100%">
+        <div class="app-icon" style="background:linear-gradient(135deg,rgba(91,138,240,.2),rgba(167,139,250,.2));border:1px solid rgba(167,139,250,.35);flex-shrink:0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="url(#lg-happ)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <defs><linearGradient id="lg-happ" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#5B8AF0"/><stop offset="100%" stop-color="#A78BFA"/></linearGradient></defs>
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+            <path d="M8 12h8M12 8l4 4-4 4"/>
+          </svg>
+        </div>
+        <div style="flex:1;text-align:left">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="app-name" style="font-size:14px">Happ</span>
+            <span style="background:linear-gradient(135deg,rgba(91,138,240,.2),rgba(167,139,250,.2));color:#A78BFA;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid rgba(167,139,250,.3)">РЕКОМЕНДУЕТСЯ</span>
+          </div>
+          <span class="app-sub" style="font-size:12px">iOS · Android · Нажми — подпишется сам</span>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+
+    <div class="app-grid" style="margin-top:10px">
+      <a class="app-btn" id="btn-hiddify" href="#" target="_blank">
+        <div class="app-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10A15 15 0 0 1 8 12a15 15 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+        </div>
+        <span class="app-name">Hiddify</span>
+        <span class="app-sub">iOS / Android / PC</span>
+      </a>
+      <a class="app-btn" id="btn-v2rayn" href="#" target="_blank">
+        <div class="app-icon purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <span class="app-name">v2rayN</span>
+        <span class="app-sub">Windows / Linux</span>
+      </a>
+      <a class="app-btn" id="btn-clash" href="#" target="_blank">
+        <div class="app-icon green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <span class="app-name">Clash / Mihomo</span>
+        <span class="app-sub">Все платформы</span>
+      </a>
+      <a class="app-btn" id="btn-streisand" href="#" target="_blank">
+        <div class="app-icon amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+        </div>
+        <span class="app-name">Streisand</span>
+        <span class="app-sub">iOS / macOS</span>
+      </a>
+    </div>
+
+    <div class="copy-section">
+      <div class="copy-input-wrap" style="margin-top:14px;">
+        <input type="text" id="sub-url-input" readonly placeholder="Ссылка подписки..." />
+        <button class="copy-btn" id="copy-sub-btn" onclick="copyUrl('sub-url-input','copy-sub-btn')">Копировать</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JSON / CLASH LINKS -->
+  <div class="card" id="extra-links-card">
+    <div class="section-label">Дополнительные форматы</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="copy-input-wrap">
+        <input type="text" id="clash-url-input" readonly placeholder="Clash / Mihomo URL..." />
+        <button class="copy-btn" onclick="copyUrl('clash-url-input',this)">Clash</button>
+      </div>
+      <div class="copy-input-wrap">
+        <input type="text" id="json-url-input" readonly placeholder="JSON конфиг..." />
+        <button class="copy-btn" onclick="copyUrl('json-url-input',this)">JSON</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- КОНФИГУРАЦИИ -->
+  <div class="card" id="links-card" style="display:none">
+    <div class="section-label">Конфигурации <span id="links-count" style="font-weight:400;color:var(--faint)"></span></div>
+    <div class="links-list" id="links-list"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer" id="footer-el">
+    &copy; <span id="footer-title">zapretcore</span>
+    <span id="support-span" style="display:none"> &mdash; <a id="support-link" href="#">Поддержка</a></span>
+  </div>
+
+</div>
 
 <script>
-  // Entrance animation
-  setTimeout(() => document.getElementById('title').classList.add('visible'), 300);
+// ── DATA ───────────────────────────────────────────────────────────────────
+// В production замените эти переменные на Go-шаблон:
+// const D = { sId: "{{ .sId }}", enabled: {{ .enabled }}, ... }
+// Ниже — демо-данные для превью:
 
-  // Copy Logic
-  function copyText(btn) {
-    const text = btn.previousElementSibling.innerText;
-    navigator.clipboard.writeText(text).then(() => {
-        const toast = document.getElementById('toast');
-        toast.style.display = 'block';
-        setTimeout(() => toast.style.display = 'none', 2000);
-    });
+const D = {
+  sId:           "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  enabled:       true,
+  download:      "14.2 ГБ",
+  upload:        "1.8 ГБ",
+  total:         "50 ГБ",
+  used:          "16.0 ГБ",
+  remained:      "34.0 ГБ",
+  expire:        Math.floor(Date.now()/1000) + 86400*18,
+  lastOnline:    Date.now() - 1000*60*7,
+  downloadByte:  14200000000,
+  uploadByte:    1800000000,
+  totalByte:     50000000000,
+  subUrl:        "https://console.zapretcore.ru/sub/f47ac10b",
+  subJsonUrl:    "https://console.zapretcore.ru/sub/f47ac10b?type=json",
+  subClashUrl:   "https://console.zapretcore.ru/sub/f47ac10b?type=clash",
+  subTitle:      "zapretcore",
+  subSupportUrl: "https://t.me/zapretcore",
+  links: [
+    "vless://abc123@console.zapretcore.ru:443?type=xhttp&security=tls&sni=console.zapretcore.ru&path=/xhttp#proxy-xhttp-777",
+    "vless://abc123@console.zapretcore.ru:443?type=grpc&security=tls&serviceName=vk.internal#proxy-grpc-228",
+    "hysteria2://abc123@console.zapretcore.ru:4443?obfs=salamander&obfs-password=secret#hysteria2-salamander",
+    "vless://abc123@89.169.128.127:443?type=tcp&security=reality&pbk=pubkey#nl-reality-relay",
+  ],
+};
+
+// ── HELPERS ────────────────────────────────────────────────────────────────
+function fmtDate(ts) {
+  if (!ts) return 'Без ограничений';
+  return new Date(ts * 1000).toLocaleDateString('ru-RU', {day:'numeric',month:'long',year:'numeric'});
+}
+function fmtAgo(ms) {
+  if (!ms) return 'Нет данных';
+  const d = Date.now() - ms;
+  if (d < 60000)    return 'Только что';
+  if (d < 3600000)  return Math.floor(d/60000) + ' мин назад';
+  if (d < 86400000) return Math.floor(d/3600000) + ' ч назад';
+  return new Date(ms).toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
+}
+function protoOf(link) {
+  const m = link.match(/^([a-z0-9]+):\/\//);
+  return m ? m[1] : '?';
+}
+function nameOf(link) {
+  const t = link.match(/#(.+)$/);
+  return t ? decodeURIComponent(t[1]) : link.substring(0,36);
+}
+function hostOf(link) {
+  const h = link.match(/@([^/?#@]+)/);
+  return h ? h[1] : '';
+}
+
+// ── COPY ───────────────────────────────────────────────────────────────────
+function copyUrl(inputId, btnEl) {
+  const inp = document.getElementById(inputId);
+  const btn = typeof btnEl === 'string' ? document.getElementById(btnEl) : btnEl;
+  if (!inp || !inp.value) return;
+  navigator.clipboard.writeText(inp.value).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Скопировано';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ── DEEPLINK BUILDERS ─────────────────────────────────────────────────────
+function makeHiddifyUrl(sub) {
+  return 'hiddify://import/' + encodeURIComponent(sub);
+}
+function makeV2rayNUrl(sub) {
+  // v2rayN uses custom protocol for import
+  return 'v2rayn://sub?url=' + encodeURIComponent(sub);
+}
+function makeClashUrl(clash) {
+  return 'clash://install-config?url=' + encodeURIComponent(clash);
+}
+function makeStreisandUrl(sub) {
+  return 'streisand://import/' + encodeURIComponent(sub);
+}
+function makeHappUrl(sub) {
+  return 'happ://add/subscription?url=' + encodeURIComponent(sub);
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function render(d) {
+  // Title
+  if (d.subTitle) {
+    document.getElementById('page-title').textContent = d.subTitle;
+    document.getElementById('footer-title').textContent = d.subTitle;
+    document.title = d.subTitle + ' — Подписка';
   }
 
-  // Smooth appearance of nodes
-  const nodes = document.querySelectorAll('.link-item');
-  const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-          if(e.isIntersecting) e.target.style.opacity = 1;
-      });
-  });
-  nodes.forEach(n => {
-      n.style.opacity = 0;
-      n.style.transition = "opacity 1s ease";
-      observer.observe(n);
-  });
+  // Status badge
+  const badge = document.getElementById('status-badge');
+  if (!d.enabled) {
+    badge.className = 'badge off';
+    badge.innerHTML = '<span class="badge-dot"></span>Отключена';
+  }
+
+  // SID
+  document.getElementById('sid-text').textContent = d.sId.substring(0,8) + '…';
+
+  // Traffic bar
+  const pct = d.totalByte > 0
+    ? Math.min(100, Math.round((d.downloadByte + d.uploadByte) / d.totalByte * 100))
+    : 0;
+  const bar = document.getElementById('bar-fill');
+  bar.style.width = pct + '%';
+  const pctEl = document.getElementById('traffic-pct');
+  if (pct >= 90) { bar.className='bar-fill crit'; pctEl.style.color='var(--red)'; }
+  else if (pct >= 70) { bar.className='bar-fill warn'; pctEl.style.color='var(--amber)'; }
+  else { pctEl.style.color='var(--accent)'; }
+  pctEl.textContent = pct + '%';
+
+  // Stats
+  document.getElementById('used-val').textContent   = d.used;
+  document.getElementById('remain-val').textContent = d.remained;
+  document.getElementById('total-val').textContent  = d.total;
+  document.getElementById('dl-val').textContent     = d.download;
+  document.getElementById('ul-val').textContent     = d.upload;
+
+  // Expire
+  const expEl = document.getElementById('expire-val');
+  expEl.textContent = fmtDate(d.expire);
+  if (d.expire > 0) {
+    const days = Math.floor((d.expire - Date.now()/1000) / 86400);
+    if (days < 3)  expEl.className = 'meta-val crit';
+    else if (days < 10) expEl.className = 'meta-val warn';
+  }
+
+  // Last online
+  const isRecent = d.lastOnline && (Date.now() - d.lastOnline) < 3600000;
+  const lastEl = document.getElementById('last-val');
+  lastEl.innerHTML = (isRecent
+    ? '<span class="online-indicator"><span class="online-dot"></span>' + fmtAgo(d.lastOnline) + '</span>'
+    : '<span class="online-indicator"><span class="online-dot old"></span>' + fmtAgo(d.lastOnline) + '</span>'
+  );
+
+  // Sub URL inputs
+  document.getElementById('sub-url-input').value   = d.subUrl   || '';
+  document.getElementById('clash-url-input').value = d.subClashUrl || '';
+  document.getElementById('json-url-input').value  = d.subJsonUrl  || '';
+
+  // App deep links
+  if (d.subUrl) {
+    document.getElementById('btn-happ').href      = makeHappUrl(d.subUrl);
+    document.getElementById('btn-hiddify').href   = makeHiddifyUrl(d.subUrl);
+    document.getElementById('btn-v2rayn').href    = makeV2rayNUrl(d.subUrl);
+    document.getElementById('btn-streisand').href = makeStreisandUrl(d.subUrl);
+  }
+  if (d.subClashUrl) {
+    document.getElementById('btn-clash').href = makeClashUrl(d.subClashUrl);
+  }
+
+  // Support
+  if (d.subSupportUrl) {
+    document.getElementById('support-span').style.display = 'inline';
+    document.getElementById('support-link').href = d.subSupportUrl;
+  }
+
+  // Links
+  if (d.links && d.links.length) {
+    const card = document.getElementById('links-card');
+    card.style.display = 'block';
+    document.getElementById('links-count').textContent = '(' + d.links.length + ')';
+    const list = document.getElementById('links-list');
+    d.links.forEach(link => {
+      const proto = protoOf(link);
+      const name  = nameOf(link);
+      const host  = hostOf(link);
+      const row = document.createElement('div');
+      row.className = 'link-row';
+      const protoClass = ['vless','vmess','hysteria2','trojan','ss'].includes(proto) ? proto : 'vless';
+      row.innerHTML = `
+        <div class="link-info">
+          <span class="link-proto ${protoClass}">${proto.toUpperCase()}</span>
+          <div class="link-name">${name}</div>
+          <div class="link-host">${host}</div>
+        </div>
+        <button class="link-copy-btn">Копировать</button>
+      `;
+      row.querySelector('.link-copy-btn').addEventListener('click', e => copyText(link, e.currentTarget));
+      list.appendChild(row);
+    });
+  }
+}
+
+render(D);
 </script>
 </body>
 </html>
