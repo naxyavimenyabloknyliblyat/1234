@@ -45,7 +45,6 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
 
-  /* ── COSMIC BACKGROUND ── */
   .bg-canvas {
     position: fixed; inset: 0; z-index: 0; overflow: hidden;
     pointer-events: none;
@@ -89,7 +88,6 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
-  /* ── LAYOUT ── */
   .page {
     position: relative; z-index: 2;
     min-height: 100vh;
@@ -116,7 +114,6 @@
     .card-configs { grid-column: span 3; }
   }
 
-  /* ── 3D ATOMIC MODEL (Auto-Rotating) ── */
   .orbit-container {
     perspective: 1200px;
     width: 140px; height: 140px;
@@ -125,7 +122,7 @@
   .orbit-tilt {
     width: 100%; height: 100%;
     transform-style: preserve-3d;
-    transform: rotateX(60deg) rotateZ(-15deg); /* Премиальный статичный ракурс */
+    transform: rotateX(60deg) rotateZ(-15deg);
   }
   .orbit-3d {
     width: 100%; height: 100%;
@@ -167,13 +164,8 @@
   .e3 { transform: rotateY(240deg) translateZ(70px) rotateX(90deg); }
 
   @media (min-width: 880px) {
-    .orbit-container {
-      width: 160px; height: 160px;
-    }
-    .electron {
-      width: 10px; height: 10px;
-      top: -5px; margin-left: -5px;
-    }
+    .orbit-container { width: 160px; height: 160px; }
+    .electron { width: 10px; height: 10px; top: -5px; margin-left: -5px; }
     .e1 { transform: rotateY(0deg) translateZ(80px) rotateX(90deg); }
     .e2 { transform: rotateY(120deg) translateZ(80px) rotateX(90deg); }
     .e3 { transform: rotateY(240deg) translateZ(80px) rotateX(90deg); }
@@ -188,7 +180,6 @@
     50% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
   }
 
-  /* ── HEADER ── */
   .header {
     text-align: center;
     margin-bottom: 32px;
@@ -203,7 +194,6 @@
   }
   .header p { font-size: 14px; color: var(--muted); margin-top: 16px; font-weight: 500; letter-spacing: 0.02em; }
 
-  /* ── CARDS (Premium Glassmorphism with Gradient Border) ── */
   .card {
     position: relative;
     background: var(--bg);
@@ -258,7 +248,6 @@
     to   { opacity:1; transform:translateY(0) scale(1); filter: blur(0); }
   }
 
-  /* ── STATUS ROW ── */
   .status-row {
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 32px;
@@ -282,7 +271,6 @@
   }
   .sid-text { font-size: 12px; color: var(--muted); font-family: 'SF Mono', monospace; font-weight: 500; }
 
-  /* ── TRAFFIC BAR ── */
   .traffic-section { margin-bottom: 28px; }
   .traffic-label-row {
     display: flex; justify-content: space-between; align-items: baseline;
@@ -315,7 +303,6 @@
   .bar-fill.warn { background: linear-gradient(90deg, var(--amber), #ff7b00); box-shadow: 0 0 10px rgba(245, 159, 0, 0.4); }
   .bar-fill.crit { background: linear-gradient(90deg, var(--red), #c92a2a); box-shadow: 0 0 10px rgba(244, 63, 94, 0.4); }
 
-  /* ── STATS GRID ── */
   .stats-grid {
     display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 20px;
   }
@@ -329,7 +316,6 @@
   .stat-val { font-size: 18px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
   .stat-lbl { font-size: 10px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: .06em; font-weight: 500; }
 
-  /* ── META ROWS ── */
   .divider { height: 1px; background: var(--border); margin: 24px 0; }
   .meta-row {
     display: flex; align-items: center; justify-content: space-between;
@@ -344,7 +330,6 @@
   .online-dot { width:6px;height:6px;border-radius:50%;background:var(--green); animation:pulse-dot 2s infinite; box-shadow: 0 0 6px var(--green); }
   .online-dot.old { background:var(--faint);animation:none; box-shadow:none; }
 
-  /* ── APP BUTTONS ── */
   .section-label {
     font-size: 11px; color: var(--muted); text-transform: uppercase;
     letter-spacing: .08em; font-weight: 600; margin-bottom: 16px;
@@ -385,6 +370,7 @@
     border-radius: 12px;
     text-decoration: none;
     transition: all .3s var(--ease);
+    cursor: pointer;
   }
   .app-btn-featured::before {
     content: '';
@@ -402,6 +388,11 @@
     transform: translateY(-2px);
     box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
   }
+  .app-btn-featured:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
   .app-btn-featured .app-content { flex: 1; text-align: left; }
   .app-btn-featured .app-title-row { display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
   .app-btn-featured .app-name { font-size: 14px; font-weight: 600; color: #fff; }
@@ -413,12 +404,15 @@
     font-size: 9px; font-weight: 700; padding: 2px 6px;
     border-radius: 4px; 
     text-transform: uppercase; letter-spacing: .03em;
+    transition: background .3s var(--ease), color .3s var(--ease);
   }
+  .app-recommend-badge.loading { background: var(--accent); color: #fff; }
+  .app-recommend-badge.success { background: var(--green); color: #fff; }
+  .app-recommend-badge.error   { background: var(--red);   color: #fff; }
   
   .app-name { font-size: 12px; font-weight: 500; color: var(--text); }
   .app-sub  { font-size: 10px; color: var(--muted); margin-top: -2px; font-weight: 400; }
 
-  /* ── COPY ROW ── */
   .copy-input-wrap {
     display: flex; gap: 6px;
     background: var(--surface2); border: 1px solid var(--border);
@@ -445,7 +439,6 @@
   .copy-btn:active { transform: scale(.95); }
   .copy-btn.copied { background: var(--green); color: #fff; }
 
-  /* ── LINKS LIST ── */
   .links-list { display: flex; flex-direction: column; gap: 8px; }
   .link-row {
     display: flex; align-items: center; justify-content: space-between;
@@ -477,7 +470,6 @@
   .link-copy-btn:hover { background: var(--text); color: #000; border-color: var(--text); }
   .link-copy-btn.copied { background: var(--green); color: #fff; border-color: var(--green); }
 
-  /* ── FOOTER ── */
   .footer {
     font-size: 12px; color: var(--muted); text-align: center;
     animation: fade-up 1s .5s var(--ease) both;
@@ -486,7 +478,6 @@
   .footer a { color: var(--text); text-decoration: none; transition: color .3s; border-bottom: 1px solid transparent; }
   .footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
-  /* ── ACCESSIBILITY & OPTIMIZATION ── */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -608,7 +599,8 @@
       <div class="card-inner">
         <div class="section-label">Подключить</div>
 
-        <a class="app-btn-featured" id="btn-happ" href="#" target="_blank" rel="noopener noreferrer">
+        <!-- Happ: API-based encrypted link -->
+        <button type="button" class="app-btn-featured" id="btn-happ">
           <div class="app-icon" style="background: rgba(255, 255, 255, 0.1); flex-shrink:0; width:36px; height:36px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:18px;height:18px">
               <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
@@ -618,12 +610,12 @@
           <div class="app-content">
             <div class="app-title-row">
               <span class="app-name">Happ</span>
-              <span class="app-recommend-badge">Защищено</span>
+              <span class="app-recommend-badge" id="happ-badge">Защищено</span>
             </div>
-            <span class="app-sub">Зашифрованная автоподписка</span>
+            <span class="app-sub" id="happ-sub">Зашифрованная автоподписка</span>
           </div>
           <svg class="app-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
+        </button>
 
         <div class="app-grid">
           <a class="app-btn" id="btn-hiddify" href="#" target="_blank" rel="noopener noreferrer">
@@ -696,11 +688,11 @@
 </div>
 
 <script>
-// ── PREMIUM STARFIELD (Optimized) ──────────────────────────────────────────
+// ── STARFIELD ──────────────────────────────────────────────────────────────
 const canvas = document.getElementById('starfield');
 const ctx = canvas.getContext('2d');
 let stars = [];
-let dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap DPR for performance
+let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
 function resizeStarfield() {
   canvas.width = window.innerWidth * dpr;
@@ -708,7 +700,6 @@ function resizeStarfield() {
   canvas.style.width = window.innerWidth + 'px';
   canvas.style.height = window.innerHeight + 'px';
   ctx.scale(dpr, dpr);
-  
   stars = [];
   const numStars = Math.floor((window.innerWidth * window.innerHeight) / 4000);
   for(let i=0; i<numStars; i++) {
@@ -729,16 +720,12 @@ function drawStarfield() {
     const s = stars[i];
     s.tw += s.tw_speed;
     const opacity = (Math.sin(s.tw) * 0.5 + 0.5) * s.z;
-    
     ctx.beginPath();
     ctx.arc(s.x, s.y, Math.max(0.1, s.r * s.z), 0, Math.PI * 2);
-    
     if (i % 90 === 0) ctx.fillStyle = `rgba(99, 102, 241, ${opacity * 0.8})`;
     else if (i % 140 === 0) ctx.fillStyle = `rgba(236, 72, 153, ${opacity * 0.8})`;
     else ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
-    
     ctx.fill();
-    
     if (s.r > 1.2) {
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.r * s.z * 2, 0, Math.PI * 2);
@@ -753,7 +740,7 @@ window.addEventListener('resize', resizeStarfield);
 resizeStarfield();
 drawStarfield();
 
-// ── MOUSE PARALLAX BACKGROUND (Только для туманностей и звезд) ──────────────
+// ── PARALLAX ──────────────────────────────────────────────────────────────
 const n1 = document.getElementById('n1');
 const n2 = document.getElementById('n2');
 const n3 = document.getElementById('n3');
@@ -762,14 +749,13 @@ const starfield = document.getElementById('starfield');
 document.addEventListener('mousemove', (e) => {
   const x = (e.clientX / window.innerWidth - 0.5) * 2;
   const y = (e.clientY / window.innerHeight - 0.5) * 2;
-  
   n1.style.transform = `translate(${-50 + x * 2}%, ${y * 2}%)`;
   n2.style.transform = `translate(${x * 3}%, ${y * 3}%)`;
   n3.style.transform = `translate(${x * 4}%, ${y * 4}%)`;
   starfield.style.transform = `translate(${x * 1}%, ${y * 1}%)`;
 });
 
-// ── CARD HOVER GLOW EFFECT ─────────────────────────────────────────────────
+// ── CARD HOVER GLOW ────────────────────────────────────────────────────────
 function handleMouseMove(e, element) {
   const rect = element.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -781,7 +767,7 @@ function handleMouseMove(e, element) {
   }
 }
 
-// ── DATA & LOGIC ───────────────────────────────────────────────────────────
+// ── DATA ───────────────────────────────────────────────────────────────────
 const D = {
   sId:          "{{ .sId }}",
   enabled:      {{ .enabled }},
@@ -829,7 +815,6 @@ function hostOf(link) {
   return h ? h[1] : '';
 }
 
-// ── SECURE DOM BUILDER ─────────────────────────────────────────────────────
 function createEl(tag, classes, text) {
   const el = document.createElement(tag);
   if (classes) el.className = classes;
@@ -858,27 +843,66 @@ function copyText(text, btn) {
   });
 }
 
-// ── DEEPLINK BUILDERS ─────────────────────────────────────────────────────
-function makeHiddifyUrl(sub) { return 'hiddify://import/' + encodeURIComponent(sub); }
-function makeV2rayNUrl(sub) { return 'v2rayn://sub?url=' + encodeURIComponent(sub); }
-function makeClashUrl(clash) { return 'clash://install-config?url=' + encodeURIComponent(clash); }
-function makeStreisandUrl(sub) { return 'streisand://import/' + encodeURIComponent(sub); }
+// ── DEEPLINKS ─────────────────────────────────────────────────────────────
+function makeHiddifyUrl(sub)   { return 'hiddify://import/' + encodeURIComponent(sub); }
+function makeV2rayNUrl(sub)    { return 'v2rayn://sub?url=' + encodeURIComponent(sub); }
+function makeClashUrl(clash)   { return 'clash://install-config?url=' + encodeURIComponent(clash); }
+function makeStreisandUrl(sub)  { return 'streisand://import/' + encodeURIComponent(sub); }
 
-// ── HAPP CRYPTO ENCRYPTOR (Base64 Obfuscation) ─────────────────────────────
-// Используем happ://crypto/ с Base64 кодированием URL, чтобы скрыть оригинальную ссылку
-// от ручного редактирования в приложении Happ.
-function makeHappCryptoUrl(url, name) {
+// ── HAPP: API-BASED ENCRYPTED LINK ────────────────────────────────────────
+// Заменяет старый makeHappCryptoUrl(base64).
+// Дёргает https://crypto.happ.su/api-v2.php, получает encrypted_link,
+// открывает приложение через него или копирует в буфер как fallback.
+async function handleHappClick() {
+  const btn    = document.getElementById('btn-happ');
+  const badge  = document.getElementById('happ-badge');
+  const sub    = document.getElementById('happ-sub');
+  const subUrl = D.subUrl;
+
+  if (!subUrl) return;
+
+  // Блокируем повторный клик
+  btn.disabled = true;
+  badge.textContent = 'Загрузка...';
+  badge.className = 'app-recommend-badge loading';
+  sub.textContent = 'Получаем зашифрованную ссылку...';
+
   try {
-    // Кодируем URL в Base64
-    const base64Url = btoa(url).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-    const safeName = name || 'Subscription';
-    
-    // Формат: happ://crypto/<base64>#name=<name>
-    return `happ://crypto/${base64Url}#name=${encodeURIComponent(safeName)}`;
-  } catch (e) {
-    console.error("Happ Crypto Encoding failed:", e);
-    // Fallback на обычный метод, если кодирование не удалось
-    return `happ://add/${encodeURIComponent(url)}#name=${encodeURIComponent(name || 'Subscription')}`;
+    const response = await fetch('https://crypto.happ.su/api-v2.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: subUrl })
+    });
+
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+
+    const data = await response.json();
+
+    if (!data.encrypted_link) throw new Error('No encrypted_link in response');
+
+    // Пробуем открыть через deeplink — если Happ установлен, он поймает
+    window.location.href = data.encrypted_link;
+
+    // Копируем в буфер как fallback (если deeplink не сработал)
+    try { await navigator.clipboard.writeText(data.encrypted_link); } catch(_) {}
+
+    badge.textContent = 'Скопировано';
+    badge.className = 'app-recommend-badge success';
+    sub.textContent = 'Ссылка открыта и скопирована в буфер';
+
+  } catch (err) {
+    console.error('Happ crypto API error:', err);
+    badge.textContent = 'Ошибка';
+    badge.className = 'app-recommend-badge error';
+    sub.textContent = 'Не удалось получить ссылку — попробуйте позже';
+  } finally {
+    // Сброс через 3 секунды
+    setTimeout(() => {
+      btn.disabled = false;
+      badge.textContent = 'Защищено';
+      badge.className = 'app-recommend-badge';
+      sub.textContent = 'Зашифрованная автоподписка';
+    }, 3000);
   }
 }
 
@@ -931,7 +955,6 @@ function render(d) {
   const isRecent = d.lastOnline && (Date.now() - d.lastOnline) < 3600000;
   const lastEl = document.getElementById('last-val');
   lastEl.innerHTML = '';
-  
   const indicator = createEl('span', 'online-indicator');
   const dot = createEl('span', isRecent ? 'online-dot' : 'online-dot old');
   indicator.appendChild(dot);
@@ -943,9 +966,9 @@ function render(d) {
   document.getElementById('json-url-input').value  = d.subJsonUrl  || '';
 
   if (d.subUrl) {
-    // Генерируем защищенную ссылку для Happ
-    document.getElementById('btn-happ').href = makeHappCryptoUrl(d.subUrl, d.subTitle);
-    
+    // Happ: вешаем обработчик (не href — это теперь button)
+    document.getElementById('btn-happ').addEventListener('click', handleHappClick);
+
     document.getElementById('btn-hiddify').href   = makeHiddifyUrl(d.subUrl);
     document.getElementById('btn-v2rayn').href    = makeV2rayNUrl(d.subUrl);
     document.getElementById('btn-streisand').href = makeStreisandUrl(d.subUrl);
@@ -965,28 +988,22 @@ function render(d) {
     document.getElementById('links-count').textContent = '(' + d.links.length + ')';
     const list = document.getElementById('links-list');
     list.innerHTML = '';
-    
     d.links.forEach(link => {
       const proto = protoOf(link);
       const name  = nameOf(link);
       const host  = hostOf(link);
-      
-      const row = createEl('div', 'link-row');
+      const row  = createEl('div', 'link-row');
       const info = createEl('div', 'link-info');
-      
       const protoClass = ['vless','vmess','hysteria2','trojan','ss'].includes(proto) ? proto : 'vless';
       const protoEl = createEl('span', 'link-proto ' + protoClass, proto.toUpperCase());
-      const nameEl = createEl('div', 'link-name', name);
-      const hostEl = createEl('div', 'link-host', host);
-      
+      const nameEl  = createEl('div', 'link-name', name);
+      const hostEl  = createEl('div', 'link-host', host);
       info.appendChild(protoEl);
       info.appendChild(nameEl);
       info.appendChild(hostEl);
-      
       const btn = createEl('button', 'link-copy-btn', 'Копировать');
       btn.type = 'button';
       btn.addEventListener('click', e => copyText(link, e.currentTarget));
-      
       row.appendChild(info);
       row.appendChild(btn);
       list.appendChild(row);
